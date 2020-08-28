@@ -86,6 +86,18 @@ public class LogDbHelper extends SQLiteOpenHelper {
         Log.i("SQLite", "Entry created.");
     }
 
+    public void insertLog(BluetoothLog bluetoothLog){
+        ContentValues cv = new ContentValues();
+        cv.put(LogTable.COLUMN_LOG, bluetoothLog.getBeacon());
+        cv.put(LogTable.COLUMN_1, bluetoothLog.getTime());
+        cv.put(LogTable.COLUMN_2, bluetoothLog.getDuration());
+
+        db = getWritableDatabase();
+        db.insert(LogTable.TABLE_NAME, null, cv);
+
+        Log.i("SQLite", "Entry inserted.");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + LogTable.TABLE_NAME);

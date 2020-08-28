@@ -157,7 +157,7 @@ public class BeaconScan extends Application implements BootstrapNotifier {
                     for (Beacon beacon : beacons) {
                         Log.i(TAG, "The beacon " + beacon.getServiceUuid() + " is about " + beacon.getDistance() + " meters away.");
                         //Log.i(TAG, "Comparing " + beacon.getServiceUuid() + " vs " + primeBeaconUuid);
-                        if ((beacon.getDistance() < 5) && (beacon.getServiceUuid() != primeBeaconUuid))
+                        if ((beacon.getDistance() < 3) && (beacon.getServiceUuid() != primeBeaconUuid))
                         {
                             //this assumes only one beacon will ever be <5 meters at all times
                             startTime = format.format(new Date());
@@ -165,7 +165,7 @@ public class BeaconScan extends Application implements BootstrapNotifier {
 
                             Log.i(TAG, "Timing new thing");
                         }
-                        else if ((beacon.getDistance() > 5 ) && (beacon.getServiceUuid() == primeBeaconUuid))
+                        else if ((beacon.getDistance() > 3 ) && (beacon.getServiceUuid() == primeBeaconUuid))
                         {
                             Date d1 = new Date();
                             Date d2 = new Date();

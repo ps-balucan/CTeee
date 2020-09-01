@@ -227,7 +227,7 @@ public class BeaconScan extends Application implements BootstrapNotifier {
 
     public static Long persistDate(Date date) {
         if (date != null) {
-            return date.getTime();
+            return date.getTime()/1000;
         }
         return null;
     }

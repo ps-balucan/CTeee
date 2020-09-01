@@ -23,9 +23,10 @@ public class LogsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_logs, container, false);
         LogDbHelper dbHelper = new LogDbHelper(getActivity());
 
-        String time1 = "2020-08-24 10:00";
-        String time2 = "2020-08-24 11:00";
+        String time1 = "2020-08-09 17:00";
+        String time2 = "2020-08-09 18:00";
         myLogList = dbHelper.getAllLogs();
+        //myLogList = dbHelper.getLogsByDate(time1, time2);
 
         mListView = (ListView) v.findViewById(R.id.listView);
         LogListAdapter adapter = new LogListAdapter(getActivity(), R.layout.adapter_view_layout, myLogList);

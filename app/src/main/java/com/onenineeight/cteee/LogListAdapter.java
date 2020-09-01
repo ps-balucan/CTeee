@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class LogListAdapter extends ArrayAdapter<BluetoothLog> {
     private Context mContext;
@@ -43,14 +44,15 @@ public class LogListAdapter extends ArrayAdapter<BluetoothLog> {
 
         tvbeacon.setText(name);
         tvtime.setText(getDateTimeFromTimeStamp(time, "h:mm a dd MMMM yyyy"));
+        //tvtime.setText(String.valueOf(time));
         tvduration.setText(duration.toString());
         return convertView;
     }
 
     public static String getDateTimeFromTimeStamp(Long time, String mDateFormat) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(mDateFormat);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(mDateFormat, Locale.US);
         //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date dateTime = new Date(time);
+        Date dateTime = new Date(time*1000);
         return dateFormat.format(dateTime);
     }
 }

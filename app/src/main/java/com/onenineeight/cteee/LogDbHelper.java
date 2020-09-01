@@ -42,7 +42,7 @@ public class LogDbHelper extends SQLiteOpenHelper {
     }
     public static Long persistDate(Date date) {
         if (date != null) {
-            return date.getTime();
+            return date.getTime()/1000;
         }
         return null;
     }
@@ -54,17 +54,18 @@ public class LogDbHelper extends SQLiteOpenHelper {
         String testDateString = "2020-08-24 09:00";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        Date createdTime = null;
-        try {
-            createdTime = df.parse(testDateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date createdTime = new Date();
+//        try {
+//            createdTime = df.parse(testDateString);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         //Date createdTime = Calendar.getInstance().getTime();
         int diff = 180;
         Date newTime = new Date(createdTime.getTime() + diff*2*60000);
         Date newnewTime = new Date(createdTime.getTime() + diff*4*60000);
+        //Log.d("LOG LIST HERE", String.valueOf(createdTime.getTime()));
 
 
         BluetoothLog b1 = new BluetoothLog("Palma",  persistDate(createdTime), 9000L);
@@ -121,25 +122,25 @@ public class LogDbHelper extends SQLiteOpenHelper {
         return bluetoothLogList;
     }
 
-    public List<BluetoothLog> getLogsByDate(String time1, String time2){
+    public List<BluetoothLog> getLogsByDate(Long timeA, Long timeB){//(String time1, String time2){
         List<BluetoothLog> bluetoothLogList = new ArrayList<>();
         db = getReadableDatabase();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        Date timeA = null;
-        Date timeB = null;
-        try {
-            timeA = df.parse(time1);
-            timeB = df.parse(time2);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.i("TIME" , persistDate(timeA).toString());
+//        Date timeA = null;
+//        Date timeB = null;
+//        try {
+//            timeA = df.parse(time1);
+//            timeB = df.parse(time2);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        Log.i("TIME" , timeA.toString());
 
         //SELECT * FROM log_table WHERE datetime(time/1000, 'unixepoch', 'localtime')  BETWEEN "2020-08-25 05:00" AND "2020-08-25 22:00" OR datetime(time/1000 + duration, 'unixepoch', 'localtime') BETWEEN "2020-08-25 05:00" AND "2020-08-25 22:00";
         //String myQuery = "SELECT * FROM " + LogTable.TABLE_NAME + " WHERE datetime(time/1000, 'unixepoch', 'localtime') BETWEEN " + time1 + " AND " +time2;
-        String myQuery = "SELECT * FROM " + LogTable.TABLE_NAME + " WHERE time <= " + persistDate(timeB) + " AND (time+duration*1000) >= " + persistDate(timeA);
+        String myQuery = "SELECT * FROM " + LogTable.TABLE_NAME + " WHERE time <= " + timeB + " AND (time+duration) >= " + timeA;
         Log.i("QUERY" , myQuery);
         Cursor c = db.rawQuery(myQuery , null);
         if (c.moveToFirst()){

@@ -18,11 +18,11 @@ public interface JsonPlaceHolderApi {
 //    //Call<Post> createPost()
 
 
-    @GET("checkinfectionreport")
-    Call <Reports> getReport(@Query("last_update_time") String time);
-
-    @GET("getlocationdata")
-    Call <ReportID> getLocData(@Query("report_id") String id);
+//    @GET("checkinfectionreport")
+//    Call <Reports> getReport(@Query("last_update_time") String time);
+//
+//    @GET("getlocationdata")
+//    Call <ReportID> getLocData(@Query("report_id") String id);
 
     @POST("sendlocationdata")
     Call <InfectedReport> postReport(@Body InfectedReport infectedReport);

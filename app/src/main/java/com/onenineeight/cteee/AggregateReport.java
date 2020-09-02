@@ -1,15 +1,17 @@
 package com.onenineeight.cteee;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.List;
 
 public class AggregateReport {
 
-    //@SerializedName("date")
+    @SerializedName("date")
     private String date;
 
-    //@SerializedName("logs")
+    @SerializedName("logs")
     private HashMap<Integer, List<Integer>> map;
 
 

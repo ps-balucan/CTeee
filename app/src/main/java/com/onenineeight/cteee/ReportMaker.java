@@ -69,7 +69,7 @@ public final class ReportMaker {
         }
 
 
-        AggregateReport aggregateReport = new AggregateReport(startDate, map);
+        AggregateReport aggregateReport = new AggregateReport("2020-08-10", map);
         Log.d(TAG, "generateReport: " + aggregateReport);
 
         return aggregateReport;

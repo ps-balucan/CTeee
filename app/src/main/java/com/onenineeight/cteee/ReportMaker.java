@@ -59,8 +59,7 @@ public final class ReportMaker {
                 for (BluetoothLog log :results)
                 {
                     Log.d(TAG, "Result: " + log.getBeacon());
-                    loc_counts.set((Integer.valueOf(log.getBeacon()) - 1), 1);
-
+                    loc_counts.set(Integer.valueOf(log.getBeacon()) - 1, 1);
                 }
             }
 
@@ -89,5 +88,27 @@ public final class ReportMaker {
 //        for () {
 //
 //        }
+    }
+
+    public static void checkExposure(LogDbHelper dbHelper, List<InfectedHistory> infectedHistories){
+        List<BluetoothLog> results;
+        for (InfectedHistory infectedHistory: infectedHistories)
+        {
+            Long timeA = infectedHistory.getTime().longValue();
+            Long timeB = infectedHistory.getTime().longValue() + infectedHistory.getDuration().longValue();
+            results = dbHelper.getLogsByDateWithBeacon(timeA, timeB, infectedHistory.getLocation().toString());
+
+            if (!results.isEmpty())
+            {
+                Log.d(TAG, "checkExposure: Exposure Detected!");
+                return;
+            }
+            else
+            {
+                Log.d(TAG, "checkExposure: clear. checking next");
+            }
+
+        }
+        Log.d(TAG, "checkExposure: No Exposure detected.");
     }
 }

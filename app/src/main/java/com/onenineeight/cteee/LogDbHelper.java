@@ -156,5 +156,38 @@ public class LogDbHelper extends SQLiteOpenHelper {
         return bluetoothLogList;
     }
 
+    public List<BluetoothLog> getLogsByDateWithBeacon(Long timeA, Long timeB, String Beacon ){//(String time1, String time2){
+        List<BluetoothLog> bluetoothLogList = new ArrayList<>();
+        db = getReadableDatabase();
+
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+//        Date timeA = null;
+//        Date timeB = null;
+//        try {
+//            timeA = df.parse(time1);
+//            timeB = df.parse(time2);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        Log.i("TIME" , timeA.toString());
+
+        //SELECT * FROM log_table WHERE datetime(time/1000, 'unixepoch', 'localtime')  BETWEEN "2020-08-25 05:00" AND "2020-08-25 22:00" OR datetime(time/1000 + duration, 'unixepoch', 'localtime') BETWEEN "2020-08-25 05:00" AND "2020-08-25 22:00";
+        //String myQuery = "SELECT * FROM " + LogTable.TABLE_NAME + " WHERE datetime(time/1000, 'unixepoch', 'localtime') BETWEEN " + time1 + " AND " +time2;
+        String myQuery = "SELECT * FROM " + LogTable.TABLE_NAME + " WHERE time <= " + timeB + " AND (time+duration) >= " + timeA + " AND beacon==" + Beacon;
+        Log.i("QUERY" , myQuery);
+        Cursor c = db.rawQuery(myQuery , null);
+        if (c.moveToFirst()){
+            do {
+                BluetoothLog bluetoothLog = new BluetoothLog();
+                bluetoothLog.setBeacon(c.getString(c.getColumnIndex(LogTable.COLUMN_LOG)));
+                bluetoothLog.setTime(c.getLong(c.getColumnIndex(LogTable.COLUMN_1)));
+                bluetoothLog.setDuration(c.getLong(c.getColumnIndex(LogTable.COLUMN_2)));
+                bluetoothLogList.add(bluetoothLog);
+            } while(c.moveToNext());
+        }
+        c.close();
+        return bluetoothLogList;
+    }
 
 }

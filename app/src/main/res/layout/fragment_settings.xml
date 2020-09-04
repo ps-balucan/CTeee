@@ -17,6 +17,22 @@
         android:layout_centerInParent="true"
         android:id="@+id/create_report_btn"
         />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Reports"
+        android:layout_above="@+id/create_report_btn"
+        android:layout_centerInParent="true"
+        android:id="@+id/check_reports_btn"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download Reports"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/create_report_btn"
+        android:id="@+id/download_reports_btn"
+        />
 
 
 

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -41,7 +42,13 @@ public class SettingsFragment extends Fragment {
         //rest functionality
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        final OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(45, TimeUnit.SECONDS)
+                .readTimeout(45, TimeUnit.SECONDS)
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 //.baseUrl("https://5n8g4h5f3m.execute-api.ap-southeast-1.amazonaws.com/v2/")
@@ -61,6 +68,15 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        final Button getReportBtn = v.findViewById(R.id.download_reports_btn);
+        getReportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
+                //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
+                getLocData();
+            }
+        });
         return v;
     }
 
@@ -69,11 +85,11 @@ public class SettingsFragment extends Fragment {
         AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
 
 
-        Call<AggregateReport> call = jsonPlaceHolderApi.postDPReport(aggregateReport);
+        Call<Void> call = jsonPlaceHolderApi.postDPReport(aggregateReport);
 
-        call.enqueue(new Callback<AggregateReport>() {
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<AggregateReport> call, Response<AggregateReport> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()){
 
                     return;
@@ -84,8 +100,34 @@ public class SettingsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<AggregateReport> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+}
+    private void getLocData(){
+        Call <List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData("1");
+
+        call.enqueue(new Callback<List<InfectedHistory>>() {
+            @Override
+            public void onResponse(Call<List<InfectedHistory>> call, Response<List<InfectedHistory>> response) {
+                if (!response.isSuccessful()){
+                    Toast.makeText(getActivity(), "Not successful: Code->" + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //Toast.makeText(getActivity(), "Is Successful: Body->" + response.body(), Toast.LENGTH_SHORT).show();
+                //InfectedHistory infectedHistory = response.body();
+                List<InfectedHistory> infectedHistories = response.body();
+//                Log.d(TAG, "Location-> " + response.body().get(1).getLocation());
+//                Log.d(TAG, "Duration-> " + response.body().get(1).getDuration());
+//                Log.d(TAG, "Time-> " + response.body().get(1).getTime());
+                Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
+                ReportMaker.checkExposure(dbHelper, infectedHistories);
+            }
+
+            @Override
+            public void onFailure(Call<List<InfectedHistory>> call, Throwable t) {
+                Toast.makeText(getActivity(), "OnFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

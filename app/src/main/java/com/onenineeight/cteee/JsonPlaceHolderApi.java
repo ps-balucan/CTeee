@@ -5,6 +5,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -18,15 +20,16 @@ public interface JsonPlaceHolderApi {
 //    //Call<Post> createPost()
 
 
-//    @GET("checkinfectionreport")
-//    Call <Reports> getReport(@Query("last_update_time") String time);
-//
-//    @GET("getlocationdata")
-//    Call <ReportID> getLocData(@Query("report_id") String id);
+    @GET("checkinfectionreport")
+    Call <Reports> getReport(@Query("last_update_time") String time);
+
+    @GET("getlocationdata")
+    Call <List<InfectedHistory>> getLocData(@Query("report_id") String id);
 
     @POST("sendlocationdata")
     Call <InfectedReport> postReport(@Body InfectedReport infectedReport);
 
+    @Headers("InvocationType: Event")
     @POST("aggregatereport")
-    Call <AggregateReport> postDPReport(@Body AggregateReport aggregateReport);
+    Call <Void> postDPReport(@Body AggregateReport aggregateReport);
 }

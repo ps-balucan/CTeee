@@ -20,14 +20,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import org.altbeacon.beacon.BeaconManager;
 
@@ -35,7 +30,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     private List<BluetoothLog> bluetoothLogList;
-    protected static final String TAG = "HomeActivity";
+    protected static final String TAG = "MonitoringActivity";
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
 
@@ -119,26 +114,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         }
-
-//        FirebaseInstanceId.getInstance().getInstanceId()
-//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.w(TAG, "getInstanceId failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new Instance ID token
-//                        String token = task.getResult().getToken();
-//
-//                        // Log and toast
-//                        //String msg = getString(R.string.msg_token_fmt, token);
-//                        Log.d(TAG, token);
-//                        Toast.makeText(HomeActivity.this, token, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
 
 
     }
@@ -270,7 +245,6 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "I am paused.");
         ((BeaconScan) this.getApplicationContext()).setMonitoringActivity(null);
     }
-
 
 
 }

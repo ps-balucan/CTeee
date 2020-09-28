@@ -92,6 +92,16 @@ public class SettingsFragment extends Fragment {
                 getAccessToken();
             }
         });
+
+        final Button reportCovidBtn = v.findViewById(R.id.report_covid_status_btn);
+        reportCovidBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
+                //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
+                reportCovid();
+            }
+        });
         return v;
     }
 
@@ -162,5 +172,32 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void reportCovid(){
+        List<BluetoothLog> patientHistory;
+        patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
+
+
+        Call<Void> call = jsonPlaceHolderApi.postHistory(patientHistory);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()){
+
+                    return;
+                }
+                Log.d(TAG, "onResponse: Code->" + response.code());
+                Log.d(TAG, "onResponse: Body->" + response.body());
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
     }
 }

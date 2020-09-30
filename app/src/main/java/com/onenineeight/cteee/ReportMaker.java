@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.math3.distribution.BinomialDistribution;
 
 public final class ReportMaker {
     public static final String TAG = "ReportMaker";
@@ -45,10 +46,16 @@ public final class ReportMaker {
         //HashMap<Integer, List<Integer>> map = new HashMap<> ();
         List<List<Integer>> list = new ArrayList<>();
 
+        //initializing values for DP Noising
+        int trials = 1;
+        double e = 11; //Epsilon; privacy budget
+        double p = 1/(java.lang.Math.exp(e/2)+1);
+        int loc = 300; //number of locations in the system
+
         for (int i = 0; i < 24 ; i++)
         {
             results = dbHelper.getLogsByDate((startTime+i*HOUR), (startTime+i*HOUR+ HOUR));
-            List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(300, 0));
+            List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(loc, 0));
             if (results.isEmpty())
             {
                 Log.d(TAG, "generateReport: result is empty for " +  (startTime+i*HOUR) + " and " + (startTime+i*HOUR+ HOUR));
@@ -61,6 +68,21 @@ public final class ReportMaker {
                     Log.d(TAG, "Result: " + log.getBeacon());
                     loc_counts.set(Integer.valueOf(log.getBeacon()) - 1, 1);
                 }
+
+                //DP implementation, initiated after data collected from BluetoothLog
+                for(int j = 0; i<loc; i++){
+                    BinomialDistribution out = new BinomialDistribution(trials, p);
+                    if(out.sample()==1) { //probability of adding noise
+                        BinomialDistribution noise = new BinomialDistribution(trials, 0.5);
+                        if(noise.sample()==1){  //50/50 chance of adding +/- noise
+                            loc_counts.set(j,loc_counts.get(j)+1);
+                        } else {
+                            loc_counts.set(j,loc_counts.get(j)-1);
+                        }
+                    }
+                }
+                //End of DP implementation
+
             }
 
             //map.put(i, loc_counts);

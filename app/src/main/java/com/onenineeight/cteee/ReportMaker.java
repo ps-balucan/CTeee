@@ -37,7 +37,7 @@ public final class ReportMaker {
             e.printStackTrace();
         }
 
-        Long startTime = timeStart.getTime()/1000 - DAY;
+        Long startTime = timeStart.getTime()/1000 ;
         Log.d(TAG, "generateReport: We will check starting " + startDate.toString());
         Log.d(TAG, "generateReport: Yesterday, In seconds since Epoch that is " + startTime);
 
@@ -48,7 +48,7 @@ public final class ReportMaker {
         for (int i = 0; i < 24 ; i++)
         {
             results = dbHelper.getLogsByDate((startTime+i*HOUR), (startTime+i*HOUR+ HOUR));
-            List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(300, 0));
+            List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(10, 0));
             if (results.isEmpty())
             {
                 Log.d(TAG, "generateReport: result is empty for " +  (startTime+i*HOUR) + " and " + (startTime+i*HOUR+ HOUR));

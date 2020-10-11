@@ -33,6 +33,14 @@
         android:layout_below="@+id/create_report_btn"
         android:id="@+id/download_reports_btn"
         />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report Covid-19 Status"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/download_reports_btn"
+        android:id="@+id/report_covid_status_btn"
+        />
 
 
 

@@ -37,18 +37,18 @@ public final class ReportMaker {
             e.printStackTrace();
         }
 
-        Long startTime = timeStart.getTime()/1000 - DAY;
+        Long startTime = timeStart.getTime()/1000 ;
         Log.d(TAG, "generateReport: We will check starting " + startDate.toString());
         Log.d(TAG, "generateReport: Yesterday, In seconds since Epoch that is " + startTime);
 
 
-        HashMap<Integer, List<Integer>> map = new HashMap<> ();
-
+        //HashMap<Integer, List<Integer>> map = new HashMap<> ();
+        List<List<Integer>> list = new ArrayList<>();
 
         for (int i = 0; i < 24 ; i++)
         {
             results = dbHelper.getLogsByDate((startTime+i*HOUR), (startTime+i*HOUR+ HOUR));
-            List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(300, 0));
+            List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(10, 0));
             if (results.isEmpty())
             {
                 Log.d(TAG, "generateReport: result is empty for " +  (startTime+i*HOUR) + " and " + (startTime+i*HOUR+ HOUR));
@@ -63,12 +63,13 @@ public final class ReportMaker {
                 }
             }
 
-            map.put(i, loc_counts);
+            //map.put(i, loc_counts);
+            list.add(loc_counts);
             //Log.d(TAG, "generateReport: Querying for time-> " + (startTime+i*HOUR) + " and " + (startTime+i*HOUR+ HOUR));
         }
 
 
-        AggregateReport aggregateReport = new AggregateReport("2020-08-10", map);
+        AggregateReport aggregateReport = new AggregateReport("2020-08-10", list);
         Log.d(TAG, "generateReport: " + aggregateReport);
 
         return aggregateReport;
@@ -110,5 +111,34 @@ public final class ReportMaker {
 
         }
         Log.d(TAG, "checkExposure: No Exposure detected.");
+    }
+
+    public static List<BluetoothLog> collectCovidHistory(LogDbHelper logDbHelper, String startDate){
+        //List<InfectedHistory> infectedHistories;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date timeA = null;
+        Date timeB = null;
+        Date timeStart = null;
+
+        try {
+            timeStart = df.parse(startDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Long endTime = timeStart.getTime()/1000;
+        Long startTime = endTime  - 14*DAY;
+
+        Log.d(TAG, "collectCovid: We will check starting " + startTime);
+        Log.d(TAG, "collectCovid: EndTime, In seconds since Epoch that is " + endTime);
+
+        List<BluetoothLog> results;
+        results = logDbHelper.getLogsByDate((startTime), (endTime));
+        if (results.isEmpty())
+        {
+            Log.d(TAG, "collectCovidHistory: Result is empty");
+        }
+        return results;
     }
 }

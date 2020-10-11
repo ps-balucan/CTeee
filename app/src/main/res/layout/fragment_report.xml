@@ -8,7 +8,6 @@
         android:rowCount="2"
         android:columnCount="2"
         >
-
         <TextView
             android:id="@+id/homepage_overview_view"
             android:layout_width="wrap_content"
@@ -21,8 +20,7 @@
             android:textSize="30sp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
+            android:layout_marginBottom="10dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -128,9 +126,7 @@
                         android:layout_marginBottom="20dp"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
-                        android:layout_centerInParent="true"
-
-                        />
+                        android:layout_centerInParent="true"/>
 
                 </RelativeLayout>
             </LinearLayout>

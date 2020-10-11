@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.results.Tokens;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+import com.onenineeight.cteee.ApiClient;
 public class SettingsFragment extends Fragment {
     private List<BluetoothLog> results;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
@@ -38,25 +41,27 @@ public class SettingsFragment extends Fragment {
 
 
 
-
         //rest functionality
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        final OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(45, TimeUnit.SECONDS)
-                .readTimeout(45, TimeUnit.SECONDS)
-                .build();
+        //rest functionality{
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+//        final OkHttpClient client = new OkHttpClient.Builder()
+//                .addInterceptor(interceptor)
+//                .connectTimeout(20, TimeUnit.SECONDS)
+//                .writeTimeout(45, TimeUnit.SECONDS)
+//                .readTimeout(45, TimeUnit.SECONDS)
+//                .build();
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                //.baseUrl("https://5n8g4h5f3m.execute-api.ap-southeast-1.amazonaws.com/v2/")
+//                .baseUrl("https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .client(client)
+//                .build();
+        //}
 
-        Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("https://5n8g4h5f3m.execute-api.ap-southeast-1.amazonaws.com/v2/")
-                .baseUrl("https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        jsonPlaceHolderApi = ApiClient.getInstance().create(JsonPlaceHolderApi.class);
 
         final Button reportBtn = v.findViewById(R.id.create_report_btn);
         reportBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +80,16 @@ public class SettingsFragment extends Fragment {
                 //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
                 //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
                 getLocData();
+            }
+        });
+
+        final Button getAccessToken = v.findViewById(R.id.check_reports_btn);
+        getAccessToken.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
+                //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
+                getAccessToken();
             }
         });
         return v;
@@ -128,6 +143,23 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<InfectedHistory>> call, Throwable t) {
                 Toast.makeText(getActivity(), "OnFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void getAccessToken(){
+        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
+            @Override
+            public void onResult(Tokens result) {
+                String AccessToken = result.getAccessToken().getTokenString();
+                Log.d(TAG, "Access Token: " + AccessToken);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if(e.getMessage() != null)
+                {
+                    Log.e("Err", e.getMessage());
+                }
             }
         });
     }

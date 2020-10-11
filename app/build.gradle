@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -10,7 +11,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        //multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -21,6 +22,8 @@ android {
         }
     }
 }
+
+
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -46,5 +49,21 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation("com.squareup.okhttp3:logging-interceptor:4.4.0")
     implementation'com.google.code.gson:gson:2.8.2'
+
+    //auth
+    // Mobile Client for initializing the SDK
+    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.18.0@aar') { transitive = true }
+    // Cognito UserPools for SignIn
+    implementation('com.amazonaws:aws-android-sdk-auth-userpools:2.17.1@aar') { transitive = true }
+    // Sign in UI Library
+    implementation('com.amazonaws:aws-android-sdk-auth-ui:2.17.1@aar') { transitive = true }
+
+    //Notifications and FCM (Google Service)
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //Add Firebase Core//
+    implementation 'com.google.firebase:firebase-core:17.5.0'
+    //Add FCM//
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-analytics:17.5.0'
 
 }

@@ -32,4 +32,7 @@ public interface JsonPlaceHolderApi {
     @Headers("InvocationType: Event")
     @POST("aggregatereport")
     Call <Void> postDPReport(@Body AggregateReport aggregateReport);
+
+    @POST("fcmtoken")
+    Call <Void> sendToken(@Body SubscribeToken subscribeToken);
 }

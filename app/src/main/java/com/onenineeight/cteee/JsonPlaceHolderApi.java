@@ -34,8 +34,8 @@ public interface JsonPlaceHolderApi {
     @POST("aggregatereport")
     Call <Void> postDPReport(@Body AggregateReport aggregateReport);
 
-    @POST("fcmtoken")
-    Call <Void> sendToken(@Body SubscribeToken subscribeToken);
+    //@POST("fcmtoken")
+    //Call <Void> sendToken(@Body SubscribeToken subscribeToken);
 
     //@POST("repor")
 }

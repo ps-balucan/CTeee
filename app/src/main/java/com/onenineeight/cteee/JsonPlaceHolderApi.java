@@ -27,15 +27,9 @@ public interface JsonPlaceHolderApi {
     Call <List<InfectedHistory>> getLocData(@Query("report_id") String id);
 
     @POST("sendlocationdata")
-    //Call <InfectedReport> postReport(@Body InfectedReport infectedReport);
-    Call <Void> postHistory(@Body List<BluetoothLog> infectedHistory);
+    Call <InfectedReport> postReport(@Body InfectedReport infectedReport);
 
     @Headers("InvocationType: Event")
     @POST("aggregatereport")
     Call <Void> postDPReport(@Body AggregateReport aggregateReport);
-
-    @POST("fcmtoken")
-    Call <Void> sendToken(@Body SubscribeToken subscribeToken);
-
-    //@POST("repor")
 }

@@ -68,11 +68,11 @@ public class LogDbHelper extends SQLiteOpenHelper {
         //Log.d("LOG LIST HERE", String.valueOf(createdTime.getTime()));
 
 
-        BluetoothLog b1 = new BluetoothLog("1",  persistDate(createdTime), 9000L);
+        BluetoothLog b1 = new BluetoothLog("Palma",  persistDate(createdTime), 9000L);
         addLog(b1);
-        BluetoothLog b2 = new BluetoothLog("2",  persistDate(newTime), j);
+        BluetoothLog b2 = new BluetoothLog("Math",  persistDate(newTime), j);
         addLog(b2);
-        BluetoothLog b3 = new BluetoothLog("3", persistDate(newnewTime), j);
+        BluetoothLog b3 = new BluetoothLog("EEE", persistDate(newnewTime), j);
         addLog(b3);
 
     }

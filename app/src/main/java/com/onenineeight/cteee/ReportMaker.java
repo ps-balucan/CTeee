@@ -56,9 +56,8 @@ public final class ReportMaker {
         {
             results = dbHelper.getLogsByDate((startTime+i*HOUR), (startTime+i*HOUR+ HOUR));
             List<Integer> loc_counts = new ArrayList<Integer>(Collections.nCopies(loc, 0));
-            if (results.isEmpty())
-            {
-                Log.d(TAG, "generateReport: result is empty for " +  (startTime+i*HOUR) + " and " + (startTime+i*HOUR+ HOUR));
+            if (results.isEmpty()) {
+                Log.d(TAG, "generateReport: result is empty for " + (startTime + i * HOUR) + " and " + (startTime + i * HOUR + HOUR));
             }
             else
             {
@@ -70,7 +69,7 @@ public final class ReportMaker {
                 }
 
                 //DP implementation, initiated after data collected from BluetoothLog
-                for(int j = 0; i<loc; i++){
+                for(int j = 0; j<loc; j++){
                     BinomialDistribution out = new BinomialDistribution(trials, p);
                     if(out.sample()==1) { //probability of adding noise
                         BinomialDistribution noise = new BinomialDistribution(trials, 0.5);

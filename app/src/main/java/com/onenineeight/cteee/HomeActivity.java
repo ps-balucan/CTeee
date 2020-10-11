@@ -19,10 +19,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.altbeacon.beacon.BeaconManager;
 
@@ -33,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     protected static final String TAG = "MonitoringActivity";
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
+    public FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
                             builder.setMessage("Please grant location access so this app can detect beacons in the background.");
                             builder.setPositiveButton(android.R.string.ok, null);
                             builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
+                                
                                 @TargetApi(23)
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
@@ -114,7 +117,15 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         }
-
+/*
+        floatingActionButton = findViewById(R.id.home_tested_positive);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this,ReportFragment.class);
+                startActivity(intent);
+            }
+        }); */
 
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -129,8 +140,8 @@ public class HomeActivity extends AppCompatActivity {
                         case R.id.nav_logs:
                             selectedFragment = new LogsFragment();
                             break;
-                        case R.id.nav_settings:
-                            selectedFragment = new SettingsFragment();
+                        case R.id.nav_report:
+                            selectedFragment = new ReportFragment();
                             break;
                     }
 

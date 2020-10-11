@@ -42,8 +42,8 @@ public final class ReportMaker {
         Log.d(TAG, "generateReport: Yesterday, In seconds since Epoch that is " + startTime);
 
 
-        //HashMap<Integer, List<Integer>> map = new HashMap<> ();
-        List<List<Integer>> list = new ArrayList<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<> ();
+
 
         for (int i = 0; i < 24 ; i++)
         {
@@ -63,13 +63,12 @@ public final class ReportMaker {
                 }
             }
 
-            //map.put(i, loc_counts);
-            list.add(loc_counts);
+            map.put(i, loc_counts);
             //Log.d(TAG, "generateReport: Querying for time-> " + (startTime+i*HOUR) + " and " + (startTime+i*HOUR+ HOUR));
         }
 
 
-        AggregateReport aggregateReport = new AggregateReport("2020-08-10", list);
+        AggregateReport aggregateReport = new AggregateReport("2020-08-10", map);
         Log.d(TAG, "generateReport: " + aggregateReport);
 
         return aggregateReport;
@@ -111,34 +110,5 @@ public final class ReportMaker {
 
         }
         Log.d(TAG, "checkExposure: No Exposure detected.");
-    }
-
-    public static List<BluetoothLog> collectCovidHistory(LogDbHelper logDbHelper, String startDate){
-        //List<InfectedHistory> infectedHistories;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date timeA = null;
-        Date timeB = null;
-        Date timeStart = null;
-
-        try {
-            timeStart = df.parse(startDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Long endTime = timeStart.getTime()/1000;
-        Long startTime = endTime  - 14*DAY;
-
-        Log.d(TAG, "collectCovid: We will check starting " + startTime);
-        Log.d(TAG, "collectCovid: EndTime, In seconds since Epoch that is " + endTime);
-
-        List<BluetoothLog> results;
-        results = logDbHelper.getLogsByDate((startTime), (endTime));
-        if (results.isEmpty())
-        {
-            Log.d(TAG, "collectCovidHistory: Result is empty");
-        }
-        return results;
     }
 }

@@ -12,11 +12,11 @@ public class AggregateReport {
     private String date;
 
     @SerializedName("logs")
-    private List<List<Integer>> list;
+    private HashMap<Integer, List<Integer>> map;
 
 
-    public AggregateReport(String date, List<List<Integer>> list) {
-        this.list = list;
+    public AggregateReport(String date, HashMap<Integer, List<Integer> > map) {
+        this.map = map;
         this.date = date;
     }
 
@@ -24,7 +24,7 @@ public class AggregateReport {
         return date;
     }
 
-    public List<List<Integer>> getList() {
-        return list;
+    public HashMap<Integer, List<Integer>> getMap() {
+        return map;
     }
 }

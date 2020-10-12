@@ -1,6 +1,7 @@
 package com.onenineeight.cteee;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,10 @@ import androidx.fragment.app.Fragment;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.results.Tokens;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -98,6 +103,7 @@ public class SettingsFragment extends Fragment {
                 //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
                 //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
                 //getAccessToken();
+                check_username();
             }
         });
 
@@ -111,6 +117,70 @@ public class SettingsFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    private void check_username() {
+        final String username = AWSMobileClient.getInstance().getUsername();
+        String token = "";
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                final String token = instanceIdResult.getToken();
+                Log.d(TAG, "getLocData: " + username );
+                Log.d(TAG, "onSuccess: " + token);
+
+                AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
+                    @Override
+                    public void onResult(Tokens result) {
+                        String AccessToken = result.getAccessToken().getTokenString();
+                        Log.d(TAG, "Access Token: " + AccessToken);
+                        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+                        deleteUserRequest.setUsername(username);
+                        deleteUserRequest.setToken(token);
+
+                        Call<Void> call = jsonPlaceHolderApi.deleteUser(AccessToken, deleteUserRequest);
+
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (!response.isSuccessful()){
+
+                                    return;
+                                }
+                                Log.d(TAG, "onResponse: Code->" + response.code());
+                                Log.d(TAG, "onResponse: Body->" + response.body());
+                                if (AWSMobileClient.getInstance().isSignedIn())
+                                {
+                                    AWSMobileClient.getInstance().signOut();
+                                    Log.d(TAG, "check_username: you are signed in and now signed out");
+                                }
+                                Intent i = new Intent(getActivity(), AuthenticationActivity.class);
+                                startActivity(i);
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Log.d(TAG, "onFailure: " + t.getMessage());
+                                Toast.makeText(getActivity(), "Opt-out has failed." , Toast.LENGTH_LONG);
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        if(e.getMessage() != null)
+                        {
+                            Log.e("Err", e.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+
+
+
     }
 
     private void postReport() {

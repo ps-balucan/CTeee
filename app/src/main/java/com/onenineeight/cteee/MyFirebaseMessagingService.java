@@ -50,7 +50,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         isCovidPositve = sharedPreferences.getBoolean("isCovidPositive", false);
 
-
+        isCovidPositve = false;
         if (obj.getNotificationType().equals("InfectionReport"))
         {
             if (isCovidPositve)

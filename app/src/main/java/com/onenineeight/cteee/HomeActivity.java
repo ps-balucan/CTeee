@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     protected static final String TAG = "HomeActivity";
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
-    public FloatingActionButton floatingActionButton;
+//    public FloatingActionButton floatingActionButton;
 
 
 
@@ -162,10 +162,11 @@ public class HomeActivity extends AppCompatActivity {
                         case R.id.nav_logs:
                             selectedFragment = new LogsFragment();
                             break;
-                        case R.id.nav_settings:
-                            selectedFragment = new SettingsFragment();
                         case R.id.nav_report:
                             selectedFragment = new ReportFragment();
+                            break;
+                        case R.id.nav_demo:
+                            selectedFragment = new SettingsFragment();
                             break;
                     }
 
@@ -216,45 +217,48 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_FINE_LOCATION: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "fine location permission granted");
-                } else {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Functionality limited");
-                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons.");
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        if (grantResults.length > 0)
+        {
+            switch (requestCode) {
+                case PERMISSION_REQUEST_FINE_LOCATION: {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "fine location permission granted");
+                    } else {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Functionality limited");
+                        builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons.");
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                        }
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                            }
 
-                    });
-                    builder.show();
+                        });
+                        builder.show();
+                    }
+                    return;
                 }
-                return;
-            }
-            case PERMISSION_REQUEST_BACKGROUND_LOCATION: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "background location permission granted");
-                } else {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Functionality limited");
-                    builder.setMessage("Since background location access has not been granted, this app will not be able to discover beacons when in the background.");
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                case PERMISSION_REQUEST_BACKGROUND_LOCATION: {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "background location permission granted");
+                    } else {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Functionality limited");
+                        builder.setMessage("Since background location access has not been granted, this app will not be able to discover beacons when in the background.");
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                        }
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                            }
 
-                    });
+                        });
 
-                    builder.show();
+                        builder.show();
+                    }
+                    //return;
                 }
-                return;
             }
         }
     }

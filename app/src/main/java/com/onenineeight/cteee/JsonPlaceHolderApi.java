@@ -4,6 +4,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -36,6 +37,9 @@ public interface JsonPlaceHolderApi {
 
     @POST("fcmtoken")
     Call <Void> sendToken(@Body SubscribeToken subscribeToken);
+
+    @POST("delete-user")
+    Call <Void> deleteUser(@Header("Authorizer") String auth, @Body DeleteUserRequest deleteUserRequest);
 
     //@POST("repor")
 }

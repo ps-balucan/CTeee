@@ -32,6 +32,8 @@ public class LogsFragment extends Fragment {
         LogListAdapter adapter = new LogListAdapter(getActivity(), R.layout.adapter_view_layout, myLogList);
         mListView.setAdapter(adapter);
 
+        dbHelper.close();
+
         return v;
     }
 }

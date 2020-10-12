@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+//import com.amazonaws.mobile.client.AWSMobileClient;
+//import com.amazonaws.mobile.client.results.Tokens;
+
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.results.Tokens;
 
@@ -27,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.onenineeight.cteee.ApiClient;
+//import com.onenineeight.cteee.ApiClient;
 public class SettingsFragment extends Fragment {
     private List<BluetoothLog> results;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
@@ -94,7 +97,7 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
                 //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
-                getAccessToken();
+                //getAccessToken();
             }
         });
 
@@ -199,6 +202,7 @@ public class SettingsFragment extends Fragment {
             }
         });
     }
+    /*
     private void getAccessToken(){
         AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
             @Override
@@ -216,7 +220,7 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
     private void reportCovid(){
         //Toggle Shared preference variable

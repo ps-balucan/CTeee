@@ -1,5 +1,7 @@
 package com.onenineeight.cteee;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.results.Tokens;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +33,7 @@ public class ReportFragment extends Fragment {
     private JsonPlaceHolderApi jsonPlaceHolderApi;
     public static final String TAG = "ReportFragment";
     private LogDbHelper dbHelper;
+    public static final String SHARED_PREFS = "sharedPrefs";
 
     @Nullable
     @Override
@@ -63,36 +69,64 @@ public class ReportFragment extends Fragment {
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "Report created", Toast.LENGTH_LONG).show();
                 //ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
-                postReport();
+                reportCovid();
             }
         });
         return v;
     }
 
-    private void postReport() {
+    private void reportCovid(){
+        //Toggle Shared preference variable
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isCovidPositive" , true);
 
-        AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
+        Log.d(TAG, "reportCovid: I've saved new value.");
+        editor.apply();
 
-
-        Call<Void> call = jsonPlaceHolderApi.postDPReport(aggregateReport);
-
-        call.enqueue(new Callback<Void>() {
+        //Do REST command
+        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()){
+            public void onResult(Tokens result) {
+                String AccessToken = result.getAccessToken().getTokenString();
+                Log.d(TAG, "Access Token: " + AccessToken);
 
-                    return;
-                }
-                Log.d(TAG, "onResponse: Code->" + response.code());
-                Log.d(TAG, "onResponse: Body->" + response.body());
+
+                List<BluetoothLog> patientHistory;
+                patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
+
+
+                Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
+
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (!response.isSuccessful()){
+
+                            return;
+                        }
+                        Log.d(TAG, "onResponse: Code->" + response.code());
+                        Log.d(TAG, "onResponse: Body->" + response.body());
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.getMessage());
+                    }
+                });
+
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
+            public void onError(Exception e) {
+                if(e.getMessage() != null)
+                {
+                    Log.e("Err", e.getMessage());
+                }
             }
         });
+    }
 }
 
-}

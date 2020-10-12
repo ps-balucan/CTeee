@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.altbeacon.beacon.BeaconManager;
 
@@ -41,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     protected static final String TAG = "HomeActivity";
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
+    public FloatingActionButton floatingActionButton;
 
 
 
@@ -74,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                             builder.setMessage("Please grant location access so this app can detect beacons in the background.");
                             builder.setPositiveButton(android.R.string.ok, null);
                             builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
+                                
                                 @TargetApi(23)
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
@@ -125,7 +128,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-
 //        FirebaseInstanceId.getInstance().getInstanceId()
 //                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
 //                    @Override
@@ -162,6 +164,8 @@ public class HomeActivity extends AppCompatActivity {
                             break;
                         case R.id.nav_settings:
                             selectedFragment = new SettingsFragment();
+                        case R.id.nav_report:
+                            selectedFragment = new ReportFragment();
                             break;
                     }
 

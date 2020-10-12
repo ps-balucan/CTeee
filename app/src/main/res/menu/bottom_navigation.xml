@@ -9,8 +9,8 @@
         android:icon="@drawable/ic_baseline_assignment_24"
         android:title="Logs"/>
     <item
-        android:id="@+id/nav_settings"
+        android:id="@+id/nav_report"
         android:icon="@drawable/ic_baseline_settings_24"
-        android:title="Settings"/>
+        android:title="Report"/>
 
 </menu>

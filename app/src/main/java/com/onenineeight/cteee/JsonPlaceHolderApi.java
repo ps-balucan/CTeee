@@ -24,11 +24,11 @@ public interface JsonPlaceHolderApi {
     Call <Reports> getReport(@Query("last_update_time") String time);
 
     @GET("getlocationdata")
-    Call <List<InfectedHistory>> getLocData(@Query("report_id") String id);
+    Call <List<InfectedHistory>> getLocData(@Header("Authorizer") String auth, @Query("report_id") String id);
 
     @POST("sendlocationdata")
         //Call <InfectedReport> postReport(@Body InfectedReport infectedReport);
-    Call <Void> postHistory(@Body List<BluetoothLog> infectedHistory);
+    Call <Void> postHistory(@Header("Authorizer") String auth, @Body List<BluetoothLog> infectedHistory);
 
     @Headers("InvocationType: Event")
     @POST("aggregatereport")

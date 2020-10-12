@@ -1,0 +1,116 @@
+package com.onenineeight.cteee;
+
+import android.app.job.JobParameters;
+import android.app.job.JobService;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.results.Tokens;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ExposureNotificationJobService extends JobService {
+    public static final String TAG = "ExposureNotifJobService";
+    private boolean jobCancelled = false;
+    private LogDbHelper dbHelper;
+    private JsonPlaceHolderApi jsonPlaceHolderApi;
+    private boolean exposureResult = false;
+
+    @Override
+    public boolean onStartJob(JobParameters jobParameters) {
+        Log.d(TAG, "onStartJob: Job Started");
+        GetExposureHistory(jobParameters);
+        return true;
+    }
+
+    private void GetExposureHistory(final JobParameters params) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                for (int i = 0; i < 10 ; i ++)
+//                {
+//                    if (jobCancelled){
+//                        return;
+//                    }
+//                    Log.d(TAG, "run: " + i);
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+                dbHelper = new LogDbHelper(ExposureNotificationJobService.this);
+                getLocData();
+                dbHelper.close();
+                Log.d(TAG, "run: Job finished.");
+                jobFinished(params, false);
+            }
+        }).start();
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters jobParameters) {
+        Log.d(TAG, "onStopJob: Job cancelled before completion");
+        jobCancelled = true;
+        return false;
+    }
+
+    private void getLocData(){
+        //threshold
+        jsonPlaceHolderApi = ApiClient.getInstance().create(JsonPlaceHolderApi.class);
+
+        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
+            @Override
+            public void onResult(Tokens result) {
+                String AccessToken = result.getAccessToken().getTokenString();
+                Log.d(TAG, "Access Token: " + AccessToken);
+
+                Call<List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData(AccessToken,"1");
+
+                call.enqueue(new Callback<List<InfectedHistory>>() {
+                    @Override
+                    public void onResponse(Call<List<InfectedHistory>> call, Response<List<InfectedHistory>> response) {
+                        if (!response.isSuccessful()){
+                            //Toast.makeText(getActivity(), "Not successful: Code->" + response.code(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //Toast.makeText(getActivity(), "Is Successful: Body->" + response.body(), Toast.LENGTH_SHORT).show();
+                        //InfectedHistory infectedHistory = response.body();
+                        List<InfectedHistory> infectedHistories = response.body();
+//                Log.d(TAG, "Location-> " + response.body().get(1).getLocation());
+//                Log.d(TAG, "Duration-> " + response.body().get(1).getDuration());
+//                Log.d(TAG, "Time-> " + response.body().get(1).getTime());
+                        Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
+                        exposureResult =ReportMaker.checkExposure(dbHelper, infectedHistories);
+                        if (exposureResult)
+                        {
+                            Log.d(TAG, "Exposure Detected! carepul");
+                        }
+                        else
+                        {
+                            Log.d(TAG, "No exposure. u safe");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<InfectedHistory>> call, Throwable t) {
+                        //Toast.makeText(getActivity(), "OnFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if(e.getMessage() != null)
+                {
+                    Log.e("Err", e.getMessage());
+                }
+            }
+        });
+    }
+}

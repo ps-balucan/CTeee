@@ -112,7 +112,7 @@ public final class ReportMaker {
 //        }
     }
 
-    public static void checkExposure(LogDbHelper dbHelper, List<InfectedHistory> infectedHistories){
+    public static boolean checkExposure(LogDbHelper dbHelper, List<InfectedHistory> infectedHistories){
         List<BluetoothLog> results;
         for (InfectedHistory infectedHistory: infectedHistories)
         {
@@ -123,7 +123,7 @@ public final class ReportMaker {
             if (!results.isEmpty())
             {
                 Log.d(TAG, "checkExposure: Exposure Detected!");
-                return;
+                return true;
             }
             else
             {
@@ -132,6 +132,7 @@ public final class ReportMaker {
 
         }
         Log.d(TAG, "checkExposure: No Exposure detected.");
+        return false;
     }
 
     public static List<BluetoothLog> collectCovidHistory(LogDbHelper logDbHelper, String startDate){

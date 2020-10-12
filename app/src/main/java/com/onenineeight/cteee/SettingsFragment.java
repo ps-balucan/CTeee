@@ -150,28 +150,47 @@ public class SettingsFragment extends Fragment {
 
     }
     private void getLocData(){
-        Call <List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData("1");
 
-        call.enqueue(new Callback<List<InfectedHistory>>() {
+
+        //threshold
+        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
             @Override
-            public void onResponse(Call<List<InfectedHistory>> call, Response<List<InfectedHistory>> response) {
-                if (!response.isSuccessful()){
-                    Toast.makeText(getActivity(), "Not successful: Code->" + response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //Toast.makeText(getActivity(), "Is Successful: Body->" + response.body(), Toast.LENGTH_SHORT).show();
-                //InfectedHistory infectedHistory = response.body();
-                List<InfectedHistory> infectedHistories = response.body();
+            public void onResult(Tokens result) {
+                String AccessToken = result.getAccessToken().getTokenString();
+                Log.d(TAG, "Access Token: " + AccessToken);
+
+                Call <List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData(AccessToken,"1");
+
+                call.enqueue(new Callback<List<InfectedHistory>>() {
+                    @Override
+                    public void onResponse(Call<List<InfectedHistory>> call, Response<List<InfectedHistory>> response) {
+                        if (!response.isSuccessful()){
+                            Toast.makeText(getActivity(), "Not successful: Code->" + response.code(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //Toast.makeText(getActivity(), "Is Successful: Body->" + response.body(), Toast.LENGTH_SHORT).show();
+                        //InfectedHistory infectedHistory = response.body();
+                        List<InfectedHistory> infectedHistories = response.body();
 //                Log.d(TAG, "Location-> " + response.body().get(1).getLocation());
 //                Log.d(TAG, "Duration-> " + response.body().get(1).getDuration());
 //                Log.d(TAG, "Time-> " + response.body().get(1).getTime());
-                Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
-                ReportMaker.checkExposure(dbHelper, infectedHistories);
+                        Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
+                        ReportMaker.checkExposure(dbHelper, infectedHistories);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<InfectedHistory>> call, Throwable t) {
+                        Toast.makeText(getActivity(), "OnFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Call<List<InfectedHistory>> call, Throwable t) {
-                Toast.makeText(getActivity(), "OnFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onError(Exception e) {
+                if(e.getMessage() != null)
+                {
+                    Log.e("Err", e.getMessage());
+                }
             }
         });
     }
@@ -195,29 +214,47 @@ public class SettingsFragment extends Fragment {
     }
 
     private void reportCovid(){
-        List<BluetoothLog> patientHistory;
-        patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
-
-
-        Call<Void> call = jsonPlaceHolderApi.postHistory(patientHistory);
-
-        call.enqueue(new Callback<Void>() {
+        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()){
+            public void onResult(Tokens result) {
+                String AccessToken = result.getAccessToken().getTokenString();
+                Log.d(TAG, "Access Token: " + AccessToken);
 
-                    return;
-                }
-                Log.d(TAG, "onResponse: Code->" + response.code());
-                Log.d(TAG, "onResponse: Body->" + response.body());
+
+                List<BluetoothLog> patientHistory;
+                patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
+
+
+                Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
+
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (!response.isSuccessful()){
+
+                            return;
+                        }
+                        Log.d(TAG, "onResponse: Code->" + response.code());
+                        Log.d(TAG, "onResponse: Body->" + response.body());
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.getMessage());
+                    }
+                });
+
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
+            public void onError(Exception e) {
+                if(e.getMessage() != null)
+                {
+                    Log.e("Err", e.getMessage());
+                }
             }
         });
-
     }
 }

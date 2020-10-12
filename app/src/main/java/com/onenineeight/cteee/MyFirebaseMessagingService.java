@@ -1,6 +1,9 @@
 package com.onenineeight.cteee;
 
 import android.app.Notification;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,6 +23,7 @@ import static com.onenineeight.cteee.BeaconScan.CHANNEL_1_ID;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private NotificationManagerCompat notificationManager;
     public static final String TAG = "FCM";
+    public static final int EXPOSURE_JOB_ID = 123;
     private TokenUpdateApi tokenUpdateApi;
 
     @Override
@@ -32,6 +37,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.d(TAG, "onMessageReceived: " + remoteMessage.getData().toString());
 
+        //Converting the String JSON type to JSON object
+        NotificationConverterClass obj = new NotificationConverterClass();
+        Gson gson = new Gson();
+        obj = gson.fromJson(remoteMessage.getData().get("default"), NotificationConverterClass.class);
+        Log.d(TAG, "onMessageReceived: " + obj.getNotificationType());
+
+        if (obj.getNotificationType().equals("InfectionReport"))
+        {
+            scheduleJob();
+        }
 //        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID )
 //                .setSmallIcon(R.drawable.ic_notif)
 //                .setContentTitle(remoteMessage.getNotification().getTitle())
@@ -42,6 +57,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //
 //        notificationManager.notify(1, notification);
 
+    }
+    private void scheduleJob(){
+        ComponentName componentName = new ComponentName(this, ExposureNotificationJobService.class);
+        JobInfo info = new JobInfo.Builder(EXPOSURE_JOB_ID, componentName)
+                .setRequiresCharging(true)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                //.setPeriodic(15 * 60 * 1000)
+                .build();
+
+        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+
+        int resultCode = scheduler.schedule(info);
+        if (resultCode == JobScheduler.RESULT_SUCCESS){
+            Log.d(TAG, "scheduleJob: Job scheduled");
+        }
+        else
+        {
+            Log.d(TAG, "scheduleJob: Job scheduling failed");
+        }
     }
 
     @Override

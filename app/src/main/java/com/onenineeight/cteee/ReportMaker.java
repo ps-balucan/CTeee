@@ -37,7 +37,7 @@ public final class ReportMaker {
             e.printStackTrace();
         }
 
-        Long startTime = timeStart.getTime()/1000 ;
+        Long startTime = timeStart.getTime()/1000 - DAY ;
         Log.d(TAG, "generateReport: We will check starting " + startDate.toString());
         Log.d(TAG, "generateReport: Yesterday, In seconds since Epoch that is " + startTime);
 

@@ -106,29 +106,48 @@ public class SettingsFragment extends Fragment {
     }
 
     private void postReport() {
-
-        AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
-
-
-        Call<Void> call = jsonPlaceHolderApi.postDPReport(aggregateReport);
-
-        call.enqueue(new Callback<Void>() {
+        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()){
+            public void onResult(Tokens result) {
+                String AccessToken = result.getAccessToken().getTokenString();
+                Log.d(TAG, "Access Token: " + AccessToken);
+                AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
 
-                    return;
-                }
-                Log.d(TAG, "onResponse: Code->" + response.code());
-                Log.d(TAG, "onResponse: Body->" + response.body());
+
+                Call<Void> call = jsonPlaceHolderApi.postDPReport(AccessToken, aggregateReport);
+
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (!response.isSuccessful()){
+
+                            return;
+                        }
+                        Log.d(TAG, "onResponse: Code->" + response.code());
+                        Log.d(TAG, "onResponse: Body->" + response.body());
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.getMessage());
+                    }
+                });
+
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
+            public void onError(Exception e) {
+                if(e.getMessage() != null)
+                {
+                    Log.e("Err", e.getMessage());
+                }
             }
         });
+
+
+
 }
     private void getLocData(){
         Call <List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData("1");
@@ -162,6 +181,7 @@ public class SettingsFragment extends Fragment {
             public void onResult(Tokens result) {
                 String AccessToken = result.getAccessToken().getTokenString();
                 Log.d(TAG, "Access Token: " + AccessToken);
+
             }
 
             @Override

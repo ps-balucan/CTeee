@@ -19,6 +19,17 @@ public class AuthenticationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
+        checkStatus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkStatus();
+    }
+
+    private void checkStatus(){
         AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
 
             @Override
@@ -45,7 +56,6 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
     }
-
     private void showSignIn() {
         try {
             AWSMobileClient.getInstance().showSignIn(this,

@@ -1,5 +1,7 @@
 package com.onenineeight.cteee;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,9 @@ public class SettingsFragment extends Fragment {
     private JsonPlaceHolderApi jsonPlaceHolderApi;
     public static final String TAG = "SettingsFragment";
     private LogDbHelper dbHelper;
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final boolean isCovidPositve = false;
 
     @Nullable
     @Override
@@ -214,6 +219,15 @@ public class SettingsFragment extends Fragment {
     }
 
     private void reportCovid(){
+        //Toggle Shared preference variable
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isCovidPositive" , true);
+
+        Log.d(TAG, "reportCovid: I've saved new value.");
+        editor.apply();
+
+        //Do REST command
         AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
             @Override
             public void onResult(Tokens result) {

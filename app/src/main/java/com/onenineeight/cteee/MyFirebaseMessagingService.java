@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final int EXPOSURE_JOB_ID = 123;
     private TokenUpdateApi tokenUpdateApi;
 
+    public static final String SHARED_PREFS = "sharedPrefs";
+    private boolean isCovidPositve = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,9 +47,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         obj = gson.fromJson(remoteMessage.getData().get("default"), NotificationConverterClass.class);
         Log.d(TAG, "onMessageReceived: " + obj.getNotificationType());
 
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        isCovidPositve = sharedPreferences.getBoolean("isCovidPositive", false);
+
+
         if (obj.getNotificationType().equals("InfectionReport"))
         {
-            scheduleJob();
+            if (isCovidPositve)
+            {
+                Log.d(TAG, "onMessageReceived: Received exposure notif but rejected since user is already positive");
+            }
+            else{
+                scheduleJob();
+            }
         }
 //        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID )
 //                .setSmallIcon(R.drawable.ic_notif)

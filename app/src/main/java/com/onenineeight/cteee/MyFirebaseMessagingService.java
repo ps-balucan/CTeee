@@ -53,7 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (obj.getNotificationType().equals("InfectionReport"))
         {
-            if (isCovidPositve)
+            if (!isCovidPositve)
             {
                 Log.d(TAG, "onMessageReceived: Received exposure notif but rejected since user is already positive");
             }

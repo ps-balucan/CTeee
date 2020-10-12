@@ -1,9 +1,13 @@
 package com.onenineeight.cteee;
 
+import android.app.Notification;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.results.Tokens;
@@ -14,13 +18,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.onenineeight.cteee.BeaconScan.CHANNEL_1_ID;
+
 public class ExposureNotificationJobService extends JobService {
     public static final String TAG = "ExposureNotifJobService";
     private boolean jobCancelled = false;
     private LogDbHelper dbHelper;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
     private boolean exposureResult = false;
-
+    private NotificationManagerCompat notificationManager;
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d(TAG, "onStartJob: Job Started");
@@ -93,7 +99,17 @@ public class ExposureNotificationJobService extends JobService {
                         }
                         else
                         {
+                            notificationManager = NotificationManagerCompat.from(ExposureNotificationJobService.this);
+
                             Log.d(TAG, "No exposure. u safe");
+                            Notification notification = new NotificationCompat.Builder(ExposureNotificationJobService.this, CHANNEL_1_ID )
+                                .setSmallIcon(R.drawable.ic_notif)
+                                .setContentTitle("PrivaTrace")
+                                .setContentText("New exposure report checked. You're safe!")
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                                .build();
+                            notificationManager.notify(1, notification);
                         }
                     }
 

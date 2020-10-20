@@ -10,11 +10,11 @@
         android:title="Logs"/>
     <item
         android:id="@+id/nav_report"
-        android:icon="@drawable/ic_baseline_report_24"
-        android:title="Report"/>
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Settings"/>
     <item
         android:id="@+id/nav_demo"
-        android:icon="@drawable/ic_baseline_settings_24"
+        android:icon="@drawable/ic_baseline_report_24"
         android:title="Demo"/>
 
 

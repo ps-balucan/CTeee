@@ -69,7 +69,7 @@ public class BeaconScan extends Application implements BootstrapNotifier {
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launcher_background);
         builder.setContentTitle("Scanning for Beacons");
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, AuthenticationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
         );

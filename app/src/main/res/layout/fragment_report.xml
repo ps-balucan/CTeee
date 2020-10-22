@@ -9,20 +9,31 @@
         android:columnCount="2"
         >
 
-        <TextView
-            android:id="@+id/homepage_overview_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/homepage_overview_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center_horizontal"
+        android:text="Report COVID Positive"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="30sp" />
+
+    <ImageView
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:src="@drawable/icon"
+            android:padding="10sp"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:layout_row="0"
-            android:layout_column="0"
-            android:text="Report COVID Positive"
-            android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:textSize="30sp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
+            android:layout_column="1"/>
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -121,16 +132,16 @@
                         android:id="@+id/submit_report"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Submit Report"
-                        app:elevation="0dp"
-                        android:elevation="0dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
                         android:layout_centerInParent="true"
-
-                        />
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:backgroundTint="#329BF3"
+                        android:elevation="10sp"
+                        android:text="Submit Report"
+                        android:textColor="#F4F0F0"
+                        app:elevation="0dp" />
 
                 </RelativeLayout>
             </LinearLayout>

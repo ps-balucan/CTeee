@@ -42,14 +42,13 @@ public class ReportFragment extends Fragment {
         dbHelper = new LogDbHelper(getActivity());
 
 
-
-
         //rest functionality
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .addNetworkInterceptor(new EncryptionInterceptor())
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(45, TimeUnit.SECONDS)
                 .readTimeout(45, TimeUnit.SECONDS)
@@ -75,11 +74,17 @@ public class ReportFragment extends Fragment {
         return v;
     }
 
+
+
     private void reportCovid(){
         //Toggle Shared preference variable
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isCovidPositive" , true);
+
+        //intialize user instance
+
+        //andy.setToken("bacon");
 
         Log.d(TAG, "reportCovid: I've saved new value.");
         editor.apply();
@@ -90,13 +95,23 @@ public class ReportFragment extends Fragment {
             public void onResult(Tokens result) {
                 String AccessToken = result.getAccessToken().getTokenString();
                 Log.d(TAG, "Access Token: " + AccessToken);
-
+                DeleteUserRequest andy = new DeleteUserRequest();
+                andy.setUsername("wassup");
 
                 List<BluetoothLog> patientHistory;
                 patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
 
 
-                Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
+                //Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
+
+                //test encrypt calling of test encrypt function -> lambda/api gateway
+                String strListString = patientHistory.toString();
+                //andy.setUsername(strListString);
+                //Call<Void> call = jsonPlaceHolderApi.testEncrypt("TESTINGWASUP");
+                //JSONObject json = new JSONObject();
+                //andy.toString();
+                Call<Void> call = jsonPlaceHolderApi.testEncrypt(andy);
+
 
                 call.enqueue(new Callback<Void>() {
                     @Override

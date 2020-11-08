@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.results.Tokens;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -99,8 +100,17 @@ public class ReportFragment extends Fragment {
                 andy.setUsername("wassup");
 
                 List<BluetoothLog> patientHistory;
-                patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
 
+                List<Integer> list = new ArrayList<Integer>();
+                list.add(1);
+                list.add(0);
+                list.add(1);
+                List<List<Integer>> patientHistorys = new ArrayList<>();
+                patientHistorys.add(list);
+                patientHistorys.add(list);
+                patientHistorys.add(list);
+                patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
+                System.out.println("Original Text : " + patientHistorys);
 
                 //Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
 
@@ -110,7 +120,8 @@ public class ReportFragment extends Fragment {
                 //Call<Void> call = jsonPlaceHolderApi.testEncrypt("TESTINGWASUP");
                 //JSONObject json = new JSONObject();
                 //andy.toString();
-                Call<Void> call = jsonPlaceHolderApi.testEncrypt(andy);
+                AggregateReport testreport = new AggregateReport("hello", patientHistorys);
+                Call<Void> call = jsonPlaceHolderApi.testEncrypt(AccessToken, testreport);
 
 
                 call.enqueue(new Callback<Void>() {

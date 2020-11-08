@@ -34,5 +34,5 @@ public interface JsonPlaceHolderApi {
     Call <Void> deleteUser(@Header("Authorizer") String auth, @Body DeleteUserRequest deleteUserRequest);
 
     @POST("securitytest")
-    Call <Void> testEncrypt(@Body DeleteUserRequest deleteUserRequest);
+    Call <Void> testEncrypt(@Header("Authorizer") String auth, @Body AggregateReport aggregateReport);
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10sp"
+    android:padding="0sp"
     android:weightSum="100"
     android:orientation="horizontal">
 
@@ -13,9 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="fill"
         android:layout_margin="10sp"
-        android:paddingTop="0sp"
         app:cardCornerRadius="25sp"
-        app:cardElevation="4sp">
+        app:cardElevation="8sp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

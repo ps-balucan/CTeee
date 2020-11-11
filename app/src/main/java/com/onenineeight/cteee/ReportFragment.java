@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.results.Tokens;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,14 +43,13 @@ public class ReportFragment extends Fragment {
         dbHelper = new LogDbHelper(getActivity());
 
 
-
-
         //rest functionality
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .addNetworkInterceptor(new EncryptionInterceptor())
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(45, TimeUnit.SECONDS)
                 .readTimeout(45, TimeUnit.SECONDS)
@@ -75,11 +75,17 @@ public class ReportFragment extends Fragment {
         return v;
     }
 
+
+
     private void reportCovid(){
         //Toggle Shared preference variable
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isCovidPositive" , true);
+
+        //intialize user instance
+
+        //andy.setToken("bacon");
 
         Log.d(TAG, "reportCovid: I've saved new value.");
         editor.apply();
@@ -90,13 +96,33 @@ public class ReportFragment extends Fragment {
             public void onResult(Tokens result) {
                 String AccessToken = result.getAccessToken().getTokenString();
                 Log.d(TAG, "Access Token: " + AccessToken);
-
+                DeleteUserRequest andy = new DeleteUserRequest();
+                andy.setUsername("wassup");
 
                 List<BluetoothLog> patientHistory;
+
+                List<Integer> list = new ArrayList<Integer>();
+                list.add(1);
+                list.add(0);
+                list.add(1);
+                List<List<Integer>> patientHistorys = new ArrayList<>();
+                patientHistorys.add(list);
+                patientHistorys.add(list);
+                patientHistorys.add(list);
                 patientHistory = ReportMaker.collectCovidHistory(dbHelper ,"2020-09-29");
+                System.out.println("Original Text : " + patientHistorys);
 
+                //Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
 
-                Call<Void> call = jsonPlaceHolderApi.postHistory(AccessToken,patientHistory);
+                //test encrypt calling of test encrypt function -> lambda/api gateway
+                String strListString = patientHistory.toString();
+                //andy.setUsername(strListString);
+                //Call<Void> call = jsonPlaceHolderApi.testEncrypt("TESTINGWASUP");
+                //JSONObject json = new JSONObject();
+                //andy.toString();
+                AggregateReport testreport = new AggregateReport("hello", patientHistorys);
+                Call<Void> call = jsonPlaceHolderApi.testEncrypt(AccessToken, testreport);
+
 
                 call.enqueue(new Callback<Void>() {
                     @Override

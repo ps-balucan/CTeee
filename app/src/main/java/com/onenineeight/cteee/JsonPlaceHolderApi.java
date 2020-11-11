@@ -12,14 +12,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface JsonPlaceHolderApi {
-//    @GET("posts")
-//    Call<List<Post>> getPosts();
-//
-//    @POST("helloworld")
-//    //Call<Post> createPost(@Body Post post);
-//    Call<LocationLogs> createPost(@Body LocationLogs locationLogs);
-//    //Call<Post> createPost()
-
 
     @GET("checkinfectionreport")
     Call <Reports> getReport(@Query("last_update_time") String time);
@@ -28,10 +20,10 @@ public interface JsonPlaceHolderApi {
     Call <List<InfectedHistory>> getLocData(@Header("Authorizer") String auth, @Query("report_id") String id);
 
     @POST("sendlocationdata")
-        //Call <InfectedReport> postReport(@Body InfectedReport infectedReport);
     Call <Void> postHistory(@Header("Authorizer") String auth, @Body List<BluetoothLog> infectedHistory);
 
     @Headers("InvocationType: Event")
+
     @POST("aggregatereport")
     Call <Void> postDPReport(@Header("Authorizer") String auth, @Body AggregateReport aggregateReport);
 
@@ -41,5 +33,6 @@ public interface JsonPlaceHolderApi {
     @POST("delete-user")
     Call <Void> deleteUser(@Header("Authorizer") String auth, @Body DeleteUserRequest deleteUserRequest);
 
-    //@POST("repor")
+    @POST("securitytest")
+    Call <Void> testEncrypt(@Header("Authorizer") String auth, @Body AggregateReport aggregateReport);
 }

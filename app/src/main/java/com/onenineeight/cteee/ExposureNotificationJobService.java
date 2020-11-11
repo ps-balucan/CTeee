@@ -3,9 +3,12 @@ package com.onenineeight.cteee;
 import android.app.Notification;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.graphics.Color;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -96,6 +99,12 @@ public class ExposureNotificationJobService extends JobService {
                         if (exposureResult > 0)
                         {
                             Log.d(TAG, "Exposure Detected! carepul");
+                            /*
+                            CardView card = view.findViewById(R.id.safeCard); //find safeCard properly
+                            card.setCardBackgroundColor(Color.RED);
+                            TextView safe = view.findViewById(R.id.safeOrAtRisk);
+                            safe.setText("At Risk"); //add code to revert back to safe
+                               */
                         }
                         else
                         {

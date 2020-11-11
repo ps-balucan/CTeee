@@ -16,10 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".HomeActivity"
             android:launchMode="singleInstance">
-
-
         </activity>
         <activity android:name=".AuthenticationActivity"
             android:label="@string/app_name">
@@ -35,7 +34,7 @@
         </service>
         <service android:name=".ExposureNotificationJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
+        <!-- bluetooth beacon finding? -->
     </application>
 
 

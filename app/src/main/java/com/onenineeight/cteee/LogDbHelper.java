@@ -182,7 +182,29 @@ public class LogDbHelper extends SQLiteOpenHelper {
                 BluetoothLog bluetoothLog = new BluetoothLog();
                 bluetoothLog.setBeacon(c.getString(c.getColumnIndex(LogTable.COLUMN_LOG)));
                 bluetoothLog.setTime(c.getLong(c.getColumnIndex(LogTable.COLUMN_1)));
-                bluetoothLog.setDuration(c.getLong(c.getColumnIndex(LogTable.COLUMN_2)));
+                if (c.getColumnIndex(LogTable.COLUMN_1) >= timeA)
+                {
+                    if ((c.getColumnIndex(LogTable.COLUMN_1) + c.getLong(c.getColumnIndex(LogTable.COLUMN_2))) <= timeB)
+                    {
+                        bluetoothLog.setDuration(c.getLong(c.getColumnIndex(LogTable.COLUMN_2)));
+                    }
+                    else
+                    {
+                        bluetoothLog.setDuration(timeB.longValue() - c.getLong(c.getColumnIndex(LogTable.COLUMN_1)));
+                    }
+                }
+                else
+                {
+                    if ( (c.getLong(c.getColumnIndex(LogTable.COLUMN_1)) + c.getLong(c.getColumnIndex(LogTable.COLUMN_2))) <= timeB )
+                    {
+                        bluetoothLog.setDuration((c.getLong(c.getColumnIndex(LogTable.COLUMN_1)) + c.getLong(c.getColumnIndex(LogTable.COLUMN_2))) - timeA);
+                    }
+                    else
+                    {
+                        bluetoothLog.setDuration(timeB - timeA);
+                    }
+                }
+                //bluetoothLog.setDuration(c.getLong(c.getColumnIndex(LogTable.COLUMN_2)));
                 bluetoothLogList.add(bluetoothLog);
             } while(c.moveToNext());
         }

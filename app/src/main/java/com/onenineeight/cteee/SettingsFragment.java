@@ -184,47 +184,51 @@ public class SettingsFragment extends Fragment {
     }
 
     private void postReport() {
-        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
-            @Override
-            public void onResult(Tokens result) {
-                String AccessToken = result.getAccessToken().getTokenString();
-                Log.d(TAG, "Access Token: " + AccessToken);
-                AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-09-01");
+        long startTime = System.nanoTime();
+        AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-08-10");
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        Log.d(TAG, "postReport: EXECUTION TIME IS " + duration);
 
-
-                Call<Void> call = jsonPlaceHolderApi.postDPReport(AccessToken, aggregateReport);
-
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (!response.isSuccessful()){
-
-                            return;
-                        }
-                        Log.d(TAG, "onResponse: Code->" + response.code());
-                        Log.d(TAG, "onResponse: Body->" + response.body());
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.d(TAG, "onFailure: " + t.getMessage());
-                    }
-                });
-
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                if(e.getMessage() != null)
-                {
-                    Log.e("Err", e.getMessage());
-                }
-            }
-        });
-
-
+//        AWSMobileClient.getInstance().getTokens(new com.amazonaws.mobile.client.Callback<Tokens>() {
+//            @Override
+//            public void onResult(Tokens result) {
+//                String AccessToken = result.getAccessToken().getTokenString();
+//                Log.d(TAG, "Access Token: " + AccessToken);
+//                AggregateReport aggregateReport = ReportMaker.generateReport(dbHelper, 3, "2020-08-10");
+//
+//
+//                Call<Void> call = jsonPlaceHolderApi.postDPReport(AccessToken, aggregateReport);
+//
+//                call.enqueue(new Callback<Void>() {
+//                    @Override
+//                    public void onResponse(Call<Void> call, Response<Void> response) {
+//                        if (!response.isSuccessful()){
+//
+//                            return;
+//                        }
+//                        Log.d(TAG, "onResponse: Code->" + response.code());
+//                        Log.d(TAG, "onResponse: Body->" + response.body());
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Void> call, Throwable t) {
+//                        Log.d(TAG, "onFailure: " + t.getMessage());
+//                    }
+//                });
+//
+//
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//                if(e.getMessage() != null)
+//                {
+//                    Log.e("Err", e.getMessage());
+//                }
+//            }
+//        });
 
     }
     private void getLocData(){
@@ -253,7 +257,16 @@ public class SettingsFragment extends Fragment {
 //                Log.d(TAG, "Duration-> " + response.body().get(1).getDuration());
 //                Log.d(TAG, "Time-> " + response.body().get(1).getTime());
                         Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
-                        ReportMaker.checkExposure(dbHelper, infectedHistories);
+                        
+                        Long total_duration = 0L;
+                        total_duration = ReportMaker.checkExposure(dbHelper, infectedHistories);
+                        if (total_duration > 0)
+                        {
+                            Log.d(TAG, "onResponse: exposure detected.");
+                        }
+                        else{
+                            Log.d(TAG, "onResponse: no exposure. ur ok");
+                        }
                     }
 
                     @Override
@@ -332,7 +345,6 @@ public class SettingsFragment extends Fragment {
                         Log.d(TAG, "onFailure: " + t.getMessage());
                     }
                 });
-
 
             }
 

@@ -25,7 +25,7 @@ public class ExposureNotificationJobService extends JobService {
     private boolean jobCancelled = false;
     private LogDbHelper dbHelper;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
-    private boolean exposureResult = false;
+    private Long exposureResult = 0L;
     private NotificationManagerCompat notificationManager;
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
@@ -93,7 +93,7 @@ public class ExposureNotificationJobService extends JobService {
 //                Log.d(TAG, "Time-> " + response.body().get(1).getTime());
                         Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
                         exposureResult =ReportMaker.checkExposure(dbHelper, infectedHistories);
-                        if (exposureResult)
+                        if (exposureResult > 0)
                         {
                             Log.d(TAG, "Exposure Detected! carepul");
                         }

@@ -65,7 +65,8 @@ public final class ReportMaker {
                 for (BluetoothLog log :results)
                 {
                     Log.d(TAG, "Result: " + log.getBeacon());
-                    loc_counts.set(Integer.valueOf(log.getBeacon()) - 1, 1);
+                    //Log.d(TAG, "generateReport: Setting loc_count of beacon " + (log.getBeacon() - 1));
+                    loc_counts.set(Integer.valueOf(log.getBeacon()), 1);
                 }
 
                 //DP implementation, initiated after data collected from BluetoothLog
@@ -112,8 +113,9 @@ public final class ReportMaker {
 //        }
     }
 
-    public static boolean checkExposure(LogDbHelper dbHelper, List<InfectedHistory> infectedHistories){
+    public static Long checkExposure(LogDbHelper dbHelper, List<InfectedHistory> infectedHistories){
         List<BluetoothLog> results;
+        Long total_duration = 0L;
         for (InfectedHistory infectedHistory: infectedHistories)
         {
             Long timeA = infectedHistory.getTime().longValue();
@@ -123,7 +125,12 @@ public final class ReportMaker {
             if (!results.isEmpty())
             {
                 Log.d(TAG, "checkExposure: Exposure Detected!");
-                return true;
+//                primitive code for duration total
+                for (BluetoothLog result: results)
+                {
+                    Log.d(TAG, "checkExposure: " + result.getDuration());
+                    total_duration = total_duration + result.getDuration();
+                }
             }
             else
             {
@@ -131,8 +138,10 @@ public final class ReportMaker {
             }
 
         }
-        Log.d(TAG, "checkExposure: No Exposure detected.");
-        return false;
+
+        Log.d(TAG, "checkExposure: Returning total duration.");
+
+        return total_duration;
     }
 
     public static List<BluetoothLog> collectCovidHistory(LogDbHelper logDbHelper, String startDate){

@@ -241,7 +241,7 @@ public class SettingsFragment extends Fragment {
                 String AccessToken = result.getAccessToken().getTokenString();
                 Log.d(TAG, "Access Token: " + AccessToken);
 
-                Call <List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData(AccessToken,"1");
+                Call <List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData(AccessToken,"104");
 
                 call.enqueue(new Callback<List<InfectedHistory>>() {
                     @Override
@@ -257,9 +257,15 @@ public class SettingsFragment extends Fragment {
 //                Log.d(TAG, "Duration-> " + response.body().get(1).getDuration());
 //                Log.d(TAG, "Time-> " + response.body().get(1).getTime());
                         Log.d(TAG, "onResponse: size of list->" + infectedHistories.size() );
-                        
+
                         Long total_duration = 0L;
+
+                        long startTime = System.nanoTime();
                         total_duration = ReportMaker.checkExposure(dbHelper, infectedHistories);
+                        long endTime = System.nanoTime();
+                        long mytime = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+                        Log.d(TAG, "TimerFunction: EXECUTION TIME IS " + mytime);
+
                         if (total_duration > 0)
                         {
                             Log.d(TAG, "onResponse: exposure detected.");
@@ -310,6 +316,7 @@ public class SettingsFragment extends Fragment {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isCovidPositive" , true);
+        editor.putLong("durationExposed", 0);
 
         Log.d(TAG, "reportCovid: I've saved new value.");
         editor.apply();

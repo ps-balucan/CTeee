@@ -3,6 +3,8 @@ package com.onenineeight.cteee;
 import android.app.Notification;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.TextView;
@@ -30,6 +32,9 @@ public class ExposureNotificationJobService extends JobService {
     private JsonPlaceHolderApi jsonPlaceHolderApi;
     private Long exposureResult = 0L;
     private NotificationManagerCompat notificationManager;
+    public static final String SHARED_PREFS = "sharedPrefs";
+
+
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d(TAG, "onStartJob: Job Started");
@@ -79,7 +84,7 @@ public class ExposureNotificationJobService extends JobService {
                 String AccessToken = result.getAccessToken().getTokenString();
                 Log.d(TAG, "Access Token: " + AccessToken);
 
-                Call<List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData(AccessToken,"1");
+                Call<List<InfectedHistory>> call = jsonPlaceHolderApi.getLocData(AccessToken,"106");
 
                 call.enqueue(new Callback<List<InfectedHistory>>() {
                     @Override
@@ -99,12 +104,28 @@ public class ExposureNotificationJobService extends JobService {
                         if (exposureResult > 0)
                         {
                             Log.d(TAG, "Exposure Detected! carepul");
+                            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putLong("durationExposed" , exposureResult);
+
                             /*
                             CardView card = view.findViewById(R.id.safeCard); //find safeCard properly
                             card.setCardBackgroundColor(Color.RED);
                             TextView safe = view.findViewById(R.id.safeOrAtRisk);
                             safe.setText("At Risk"); //add code to revert back to safe
                                */
+                            notificationManager = NotificationManagerCompat.from(ExposureNotificationJobService.this);
+                            Notification notification = new NotificationCompat.Builder(ExposureNotificationJobService.this, CHANNEL_1_ID )
+                                    .setSmallIcon(R.drawable.ic_notif)
+                                    .setContentTitle("PrivaTrace")
+                                    .setContentText("New exposure report checked. You're at risk!")
+                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                                    .build();
+                            notificationManager.notify(1, notification);
+
+                            Log.d(TAG, "reportCovid: I've saved new value. for duration it's " + exposureResult );
+                            editor.apply();
                         }
                         else
                         {

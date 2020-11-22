@@ -60,7 +60,11 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void showSignIn() {
         try {
             AWSMobileClient.getInstance().showSignIn(this,
-                    SignInUIOptions.builder().nextActivity(HomeActivity.class).build()); //search if this can be modified to change log in UI
+                    SignInUIOptions.builder()
+                            .nextActivity(HomeActivity.class)
+                            .logo(R.drawable.icon_cropped)
+                            .backgroundColor(-1)
+                            .build()); //search if this can be modified to change log in UI
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }

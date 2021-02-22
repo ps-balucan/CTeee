@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/ps-balucan/CTeee/">
-    <img src="app/src/main/res/drawable/splash_page.png" alt="Logo" width="300" height="450">
+    <img src="app/src/main/res/drawable/splash_page.png" alt="Logo" width="450" height="300">
   </a>
 
   <h3 align="center">Privatrace (Mobile App) </h3>

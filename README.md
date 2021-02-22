@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="app/src/main/res/drawable/splash_page.png">
-    <img src="main/contact_tracing/static/images/circle.png" alt="Logo" width="300" height="450">
+  <a href="https://github.com/ps-balucan/CTeee/">
+    <img src="app/src/main/res/drawable/splash_page.png" alt="Logo" width="300" height="450">
   </a>
 
   <h3 align="center">Privatrace (Mobile App) </h3>
@@ -10,7 +10,7 @@
   <p align="center">
     A differentially-private contact tracing and indoor foot traffic system
     <br />
-    <a href="app/src/main/res/drawable/logo_small_dark.png"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/ps-balucan/CTeee/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
   </p>
@@ -46,7 +46,7 @@
 ## About The Project
 
 <p align = "center">
-<img src="main/contact_tracing/static/images/splash_page.png" width="300" align = "center">
+<img src="app/src/main/res/drawable/logo_small_dark.png" width="300" align = "center">
 </p>
 
 Privatrace seeks to strike a balance between both privacy and utility in implementing a contact tracing system. It involves a decentralized contact tracing approach paired with a differentially-private collection of foot traffic data. Privatrace conducts contact tracing without sharing users' data outside of their personal phones, and it uses differentially privatized data in foot traffic analysis to augment contact tracing efforts with insight into user movements to maximize the allocation of resources. Other than privacy and utility, strict user security was also implemented through the use of end-to-end encryption. This contact tracing system is composed an Android mobile application implemented using Java, a Web Application implemented using Django and AWS, and BLE beacons for location tracking.

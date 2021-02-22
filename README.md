@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/ps-balucan/CTeee/blob/master/app/src/main/res/drawable/splash_page.png">
-    <img src="main/contact_tracing/static/images/circle.png" alt="Logo" width="80" height="80">
+  <a href="app/src/main/res/drawable/splash_page.png">
+    <img src="main/contact_tracing/static/images/circle.png" alt="Logo" width="300" height="450">
   </a>
 
   <h3 align="center">Privatrace (Mobile App) </h3>
@@ -10,7 +10,7 @@
   <p align="center">
     A differentially-private contact tracing and indoor foot traffic system
     <br />
-    <a href="https://github.com/claudynetrixie/contact_tracing"><strong>Explore the docs »</strong></a>
+    <a href="app/src/main/res/drawable/logo_small_dark.png"><strong>Explore the docs »</strong></a>
     <br />
     <br />
   </p>
@@ -78,7 +78,7 @@ link: [Mobile Application Repository](https://github.com/ps-balucan/CTeee)
 ### <ins>Built With </ins>
 
 Mobile Application
-* Java
+*Java
 *AltBeacon Library (For Bluetooth Scanning and Logging functionality)
 *XML
 *Retrofit (for REST functionality)

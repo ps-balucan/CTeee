@@ -61,7 +61,7 @@ Functions:
 * Exposure Notifications
 * Aggregate Report (Creation and Aggregation)
 
-link: [Web Application Repository] (https://github.com/claudynetrixie/contact_tracing)
+link: [Web Application Repository] (https://github.com/ps-balucan/CTeee/)
 
 ### <ins>Mobile Application </ins>
 The mobile application plays an integral role in the contact tracing system proposed. It functions as the client facing portion of our system and will be the platform that the users can use to interact with the functions offered by our contact tracing system. Despite playing an external role in the system, the mobile application still contains a back-end and front-end portion, namely the database design and the mobile application functions. 
@@ -94,7 +94,7 @@ Mobile Application
 The first thing to do is to clone the repository:
 
 ```sh
-$ git clone https://github.com/claudynetrixie/contact_tracing
+$ git clone https://github.com/ps-balucan/CTeee/
 ```
 Open it on Android Studio and download any required libraries to sync with the project.
 

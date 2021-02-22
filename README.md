@@ -78,15 +78,15 @@ link: [Mobile Application Repository](https://github.com/ps-balucan/CTeee)
 ### <ins>Built With </ins>
 
 Mobile Application
-*Java
-*AltBeacon Library (For Bluetooth Scanning and Logging functionality)
-*XML
-*Retrofit (for REST functionality)
-*Okhttp
-*SQLite (Mobile database)
-*End to End Encryption of location data (AES/CBC/PKCS5Padding)
-*Firebase Notification Manager
-*AWS Services (API Gateway, Cognito)
+* Java
+* AltBeacon Library (For Bluetooth Scanning and Logging functionality)
+* XML
+* Retrofit (for REST functionality)
+* Okhttp
+* SQLite (Mobile database)
+* End to End Encryption of location data (AES/CBC/PKCS5Padding)
+* Firebase Notification Manager
+* AWS Services (API Gateway, Cognito)
 
 
 ## Setup
@@ -108,11 +108,10 @@ Android 10
 ## Screenshots
 
 <p float = "left">
-<img src="demos/DemoApp.PNG" width="500" align = "center">
-<img src="demos/mobilehomepage.png" width="500" align = "center">
-<img src="demos/mobilelogin.png" width="500" align = "center">
-<img src="demos/mobilesplash.png" width="500" align = "center">
-
+  <img src="demos/mobilesplash.png" width="200" align = "center">
+  <img src="demos/mobilelogin.png" width="200" align = "center">
+  <img src="demos/mobilehomepage.png" width="200" align = "center">
+  <img src="demos/DemoApp.PNG" width="200" align = "center">
 </p>
 
 
